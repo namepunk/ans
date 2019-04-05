@@ -1,0 +1,26 @@
+---
+- name: app deploy
+  hosts: _app
+  become: yes
+
+  tasks:
+  - git:
+      repo: 'https://github.com/z3rohour/extra.git'
+      dest: /app
+      force: yes
+  - pip:
+      requirements: /app/requirements.txt
+
+  - copy:
+      src: ./files/app.service
+      dest: /etc/systemd/system/app.service
+
+  - template:
+      src: ./files/config.j2
+      dest: /app/config.py
+
+  - systemd:
+      name: app
+      enabled: yes
+      state: started
+

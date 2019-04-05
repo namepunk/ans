@@ -1,0 +1,40 @@
+---
+- name: mysql deploy
+  hosts: _db
+  become: yes
+
+  tasks:
+  - name: install mysql
+    apt:
+      name: mysql-server
+      state: present
+  
+  - name: create db
+    mysql_db:
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+      login_user: root
+      name: app
+      state: present
+
+  - name: create user
+    mysql_user:
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+      login_user: root
+      name: app
+      password: 123123
+      priv: '*.*:ALL'
+      host: '%'
+      state: present
+
+  - name: configure database
+    copy:
+      src: ./files/mysqld.conf
+      dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    notify: 
+      - mysql_restart
+
+  handlers:
+  - name: mysql_restart
+    systemd: 
+      name: mysql  
+      state: restarted

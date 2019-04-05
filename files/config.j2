@@ -1,0 +1,12 @@
+# MySQL parameters
+{% for host in groups['_db'] %}
+mysql_host = '{{ hostvars[host]['private_dns_name'] }}' 
+{% endfor %}
+mysql_user = 'app'
+mysql_pass = '123123'
+mysql_db = 'app'
+
+# application parameters
+app_debug_mode = True
+app_port = 80
+app_ip = '0.0.0.0'

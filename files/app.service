@@ -1,0 +1,12 @@
+[Unit]
+Description=Test app
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python /app/app.py
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
